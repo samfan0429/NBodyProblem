@@ -8,7 +8,7 @@
  *           To get verbose output, define DEBUG
  *
  * Run:      ./omp_nbody_basic <number of threads> <number of particles>
- *              <number of timesteps>  <size of timestep> 
+ *              <number of timesteps>  <size of  timestep> 
  *              <output frequency> <g|i>
  *              'g': generate initial conditions using a random number
  *                   generator
@@ -323,7 +323,8 @@ void Compute_force(vect_t forces[], struct particle_s curr[],
 #  endif
    // f_part_k[X]=f_part_k[Y]=0.0;
 #  pragma acc kernels
-#  pragma acc loop independent private(mg, len, len_3, f_part_k) //private(mg, len, len_3)
+{
+#  pragma acc loop independent gang vector private(mg, len, len_3, f_part_k) //private(mg, len, len_3)
    for (int part = 0; part < n; part++){
       forces[part][X] = forces[part][Y] = 0.0;
 #  pragma acc loop independent vector
@@ -349,6 +350,7 @@ void Compute_force(vect_t forces[], struct particle_s curr[],
          }   
       }   
    } 
+}
 }  /* Compute_force */
 
 
